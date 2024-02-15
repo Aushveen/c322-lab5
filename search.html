@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Search Ducks</title>
+    <title>Search ducks</title>
     <style>
-        table {
-            border: 1px solid;
-            border-collapse: collapse;
-            margin: 30px;
-        }
+      table {
+        border: 1px solid;
+        border-collapse: collapse;
+        margin: 30px;
+      }
 
-        table td, th {
-            border: 1px solid #000;
-        }
+      table td,
+      th {
+        border-left: 1px solid #000;
+        border-right: 1px solid #000;
+      }
 
-        table td:first-child, table th:first-child {
-            border-left: none;
-        }
+      table td:first-child {
+        border-left: none;
+      }
 
-        table td:last-child, table th:last-child {
-            border-right: none;
-        }
+      table td:last-child {
+        border-right: none;
+      }
     </style>
-</head>
-<body>
-    <label>Type:</label>
+  </head>
+  <body>
+    <labe>Type:</labe>
     <input id="type" />
     <button onclick="search()">Search</button>
     <br />
@@ -34,62 +36,57 @@
             <tr>
                 <th>Id</th>
                 <th>Type</th>
-            </tr>
+              </tr>
         </thead>
         <tbody id="result">
-            <!-- Search results will be displayed here -->
+
         </tbody>
+     
     </table>
 
     <script>
-        let ducks = [];
+       let ducks = [];
 
-        async function getAll() {
-            let host = "http://localhost:8080/ducks";
-            try {
-                const response = await fetch(host);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                ducks = await response.json();
-                return ducks;
-            } catch (error) {
-                console.error('There has been a problem with your fetch operation:', error);
-                return [];
-            }
+      async function getAll(){
+        let host = "http://localhost:8080";
+        // to do
+        try {
+          const response = await fetch(host);
+          if (!response.ok) { // Check if the HTTP request was successful
+            throw new Error('Network response was not ok');
+          }
+          const ducks = await response.json(); 
+          return ducks; 
+        } catch (error) {
+          console.error('There has been a problem with your fetch operation:', error);
+          return []; 
         }
+      } 
 
-        async function search() {
-            if (ducks.length === 0) {
-                await getAll();
-            }
+      async function search() {    
 
-            let duckType = document.getElementById("type").value.trim().toLowerCase();
-            let resultTable = document.getElementById("result");
-            resultTable.innerHTML = "";
+        if(ducks.length == 0)
+          ducks = await getAll();
 
-            let filteredDucks = ducks.filter(duck => !duckType || duck.type.toLowerCase() === duckType);
-
-            filteredDucks.forEach(duck => {
-                let row = document.createElement("tr");
-                let cellId = document.createElement("td");
-                cellId.textContent = duck.id;
-                let cellType = document.createElement("td");
-                cellType.textContent = duck.type;
-                row.appendChild(cellId);
-                row.appendChild(cellType);
-                resultTable.appendChild(row);
-            });
-
-            if (filteredDucks.length === 0) {
-                let row = document.createElement("tr");
-                let cell = document.createElement("td");
-                cell.textContent = "No ducks found";
-                cell.colSpan = 2;
-                row.appendChild(cell);
-                resultTable.appendChild(row);
-            }
+        let duckType = document.getElementById("type").value;
+        let table = document.getElementById("searchResult");
+        table.innerHTML = "";
+        
+        for (let duck of ducks) {
+          if (!duckType || duck.type.toLowerCase() == duckType.toLowerCase()) {
+            let row = document.createElement("tr");
+            let cell1 = document.createElement("td");
+            let id = document.createTextNode(duck.id);
+            cell1.appendChild(id);
+            row.appendChild(cell1);
+            let cell2 = document.createElement("td");
+            let type = document.createTextNode(duck.type);
+            cell2.appendChild(type);
+            row.appendChild(cell2);
+            table.appendChild(row);
+          }
         }
+      }
     </script>
-</body>
+  </body>
 </html>
