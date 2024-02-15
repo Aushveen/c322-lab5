@@ -45,16 +45,31 @@
     </table>
 
     <script>
-       let ducks = [
-        { id: 1, type: "Mallard" },
-        { id: 2, type: "Redhead" },
-        { id: 3, type: "Decoy" },
-      ];
+       let ducks = [];
+
+      async function getAll(){
+        let host = "http://localhost:8080/ducks";
+        // to do
+        try {
+          const response = await fetch(host);
+          if (!response.ok) { // Check if the HTTP request was successful
+            throw new Error('Network response was not ok');
+          }
+          const ducks = await response.json(); 
+          return ducks; 
+        } catch (error) {
+          console.error('There has been a problem with your fetch operation:', error);
+          return []; 
+        }
+      } 
 
       async function search() {    
 
+        if(ducks.length == 0)
+          ducks = await getAll();
+
         let duckType = document.getElementById("type").value;
-        let table = document.getElementById("result");
+        let table = document.getElementById("searchResult");
         table.innerHTML = "";
         
         for (let duck of ducks) {
