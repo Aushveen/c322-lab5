@@ -45,17 +45,10 @@
     </table>
 
     <script>
-          let ducks = [
-            { id: 1, type: "Mallard" },
-            { id: 2, type: "Redhead" },
-            { id: 3, type: "Decoy" },
-            { id: 4, type: "Redhead" },
-            { id: 5, type: "Redhead" },
-            { id: 6, type: "Mallard" }
-        ];
+          let ducks = [];
 
       async function getAll(){
-        let host = "http://localhost:8080";
+        let host = "http://localhost:8080/ducks";
         // to do
         try {
           const response = await fetch(host);
